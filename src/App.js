@@ -30,7 +30,7 @@ if (localStorage.jwtToken) {
     // Redirect to login
     window.location.href = "/login";
   }
-  console.log(decoded.exp, currentTime);
+  // console.log(decoded.exp, currentTime);
 }
 
 class App extends Component {

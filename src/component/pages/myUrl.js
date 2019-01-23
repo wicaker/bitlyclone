@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Row, Col, Input, Button } from "react-materialize";
 import Profile from "./profile";
+import openSocket from 'socket.io-client';
 
 class MyUrl extends Component {
   constructor(props) {
@@ -13,16 +14,29 @@ class MyUrl extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     axios
-      .get("http://localhost:5000/api/shorters")
-      .then(res => {
-        this.setState({
-          listUrl: res.data
-        });
-      })
-      .catch(err => console.log(err));
+    .get("http://localhost:5000/api/shorters")
+    .then(res => {
+      this.setState({
+        listUrl: res.data
+      });
+    })
+    .catch(err => console.log(err));
+    const socket = openSocket('http://localhost:5000');
+    socket.on('shorter', res => {
+      const data = this.state.listUrl.map(value => {
+        if(value.shortUrl === res.shortUrl){
+          value.totalClicks = res.totalClicks
+        }
+        return value;
+      });
+      this.setState({
+        listUrl : data
+      });
+    });
   }
+
   handleChange(e) {
     this.setState({
       [e.target.id]: this.formatDate(e.target.value)
@@ -30,6 +44,20 @@ class MyUrl extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
+  }
+  handlDelete(urlId){
+    axios('http://localhost:5000/api/shorters/delete/' + urlId, {
+      method: 'DELETE'
+    })
+    .then(resData => {
+      this.setState(prevState => {
+        const updatedPosts = prevState.listUrl.filter(p => p._id !== urlId);
+        return { listUrl: updatedPosts};
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   formatDate = val => {
@@ -46,7 +74,6 @@ class MyUrl extends Component {
         this.formatDate(new Date(value.createdAt)) >= from && this.formatDate(new Date(value.createdAt)) <= to
       );
     });
-    console.log("data = ", data);
     const dataUrl = data.map(item => {
         return (
           <Row key={item._id} className="z-depth-1">
@@ -62,18 +89,21 @@ class MyUrl extends Component {
                 Short Url : <a href={item.shortUrl}>{item.shortUrl}</a>
               </Col>
               <Col s={12}>Total Clicks : {item.totalClicks}</Col>
+              <Col s={12}><Button s={2} className='red' onClick={this.handlDelete.bind(this, item._id)}>
+              Delete
+            </Button></Col>
             </div>
           </Row>
         );
       
     });
     return (
-      <div>
+      <div className='center'>
         <Profile />
         <form onSubmit={this.handleSubmit.bind(this)} className="container">
           <Row>
             <Input
-              s={2}
+              s={6}
               type="date"
               className="datepicker"
               label="from"
@@ -81,19 +111,16 @@ class MyUrl extends Component {
               onChange={this.handleChange.bind(this)}
             />
             <Input
-              s={2}
+              s={6}
               type="date"
               className="datepicker"
               label="to"
               id="to"
               onChange={this.handleChange.bind(this)}
             />
-            <Button s={2} type="submit" value="Submit">
-              Check
-            </Button>
           </Row>
         </form>
-        {dataUrl ? dataUrl : "Your short url not found in this period"}
+        {dataUrl.length!==0 ? dataUrl:'Data not found' }
       </div>
     );
   }

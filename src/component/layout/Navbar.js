@@ -9,7 +9,7 @@ import * as actionCreators from "../../store/actions/authActions"; //connect to 
 const MyNavbar = props => {
   const { auth } = props;
   const links =
-    auth.isAuthenticated == true ? (
+    auth.isAuthenticated === true ? (
       <SignedInLinks props={props} />
     ) : (
       <SignedOutLinks />

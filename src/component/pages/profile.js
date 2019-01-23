@@ -8,7 +8,7 @@ const Profile = props => {
     <div className="blue lighten-5 ">
       <Row className="container">
         <img src={props.auth.user.avatar} alt="profile" className="circle" />
-        {props.auth.user.name}
+        <h4>{props.auth.user.name}</h4>
       </Row>
     </div>
   );

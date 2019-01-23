@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Row, Input, Button } from "react-materialize";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 import * as actionCreators from "../../store/actions/authActions"; //connect to authActions
 
 class Register extends Component {
