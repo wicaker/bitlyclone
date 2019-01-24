@@ -3,7 +3,8 @@ import isEmpty from "../../validation/is-empty";
 const initState = {
   authError: null,
   isAuthenticated: false,
-  user: {}
+  user: {},
+  registerStatus : false
 };
 
 const authReducer = (state = initState, action) => {
@@ -28,7 +29,8 @@ const authReducer = (state = initState, action) => {
       console.log("register success");
       return {
         ...state,
-        authError: null
+        authError: null,
+        registerStatus: true
       };
 
     case "REGISTER_ERROR":

@@ -35,7 +35,12 @@ class Home extends Component {
               />
             </Row>
             <p>
-              Your short url : <a href={urlShort}>{urlShort}</a>
+              Your short url :{" "}
+              {this.props.auth.isAuthenticated ? (
+                <a href={urlShort}>{urlShort}</a>
+              ) : (
+                "Your login session outdated, You must login first"
+              )}
             </p>
             <Button type="submit" value="Submit">
               Create
