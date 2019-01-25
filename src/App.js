@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./store/actions/authActions";
 import store from "./store";
+import ApiUrl from './konfig/Api';
 
 import MyNavbar from "./component/layout/Navbar";
 import Register from "./component/auth/Register";
@@ -35,6 +36,7 @@ if (localStorage.jwtToken) {
 
 class App extends Component {
   render() {
+    console.log(ApiUrl)
     return (
       <BrowserRouter>
         <div>

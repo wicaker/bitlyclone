@@ -4,6 +4,7 @@ import { Row, Col, Input, Button, Modal } from "react-materialize";
 import Profile from "./profile";
 import openSocket from "socket.io-client";
 import EditUrl from "./editUrl";
+import ApiUrl from '../../konfig/Api';
 
 class MyUrl extends Component {
   constructor(props) {
@@ -17,14 +18,14 @@ class MyUrl extends Component {
 
   componentWillMount() {
     axios
-      .get("http://localhost:5000/api/shorters")
+      .get(ApiUrl+"api/shorters")
       .then(res => {
         this.setState({
           listUrl: res.data
         });
       })
       .catch(err => console.log(err));
-    const socket = openSocket("http://localhost:5000");
+    const socket = openSocket(ApiUrl);
     socket.on("shorter", res => {
       const data = this.state.listUrl.map(value => {
         if (value.shortUrl === res.shortUrl) {
@@ -58,7 +59,7 @@ class MyUrl extends Component {
     e.preventDefault();
   }
   handlDelete(urlId) {
-    axios("http://localhost:5000/api/shorters/delete/" + urlId, {
+    axios(ApiUrl+"api/shorters/delete/" + urlId, {
       method: "DELETE"
     })
       .then(resData => {

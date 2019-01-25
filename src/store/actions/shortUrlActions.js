@@ -1,8 +1,9 @@
 import axios from "axios";
+import ApiUrl from '../../konfig/Api';
 
 export const createShortUrl = url => dispatch => {
   axios
-    .post("http://localhost:5000/api/shorters", url)
+    .post(ApiUrl+"api/shorters", url)
     .then(res => {
       console.log(res);
       dispatch({ type: "SHORT_URL_SUCCESS", res });
